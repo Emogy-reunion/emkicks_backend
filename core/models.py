@@ -15,3 +15,30 @@ class Users(db.Model):
     role = db.Column(ENUM('member', 'admin', 'superadmin', name='role_enum'), nullable=False, default='member')
     is_verified = db.Column(db.Boolean, nullable=False, default=False)
     registered_on = db.Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
+
+    def __init__(self, email, password):
+        '''
+        Instantiates the users model objects
+        '''
+        self.email = email
+        self.passwordhash = self.generate_passwordhash(password)
+
+    def generate_passwordhash(self, password):
+        '''
+        hashes the password to boost security
+        '''
+        return bcrypt.generate_password_hash(password)
+
+    def check_passwordhash(self, password):
+        '''
+        compares the entered password with the stored hash
+        '''
+        return check_password_hash(self.passwordhash, password)
+
+
+
+class Profiles(db.Model):
+    '''
+    stores the user profile information
+    '''
+    id = db.Column(db.
