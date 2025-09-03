@@ -41,6 +41,7 @@ class Profiles(db.Model):
     '''
     stores the user profile information
     '''
+    id = db.Column(db.UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
     user_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('users.id', ondelete='cascade'), nullable=False, unique=True)
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
