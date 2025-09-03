@@ -1,7 +1,7 @@
 from core import db, bcrypt
 import uuid
 from datetime import datetime
-from sqlalchemy import TIMESTAMP
+from sqlalchemy import TIMESTAMP, Enum
 from sqlalchemy.sql import func
 
 class Users(db.Model):
@@ -11,7 +11,7 @@ class Users(db.Model):
     id = db.Column(db.UUID(as_uuid=True), primary_key=True, nullable=False, unique=True, default=uuid.uuid4)
     email = db.Column(db.String(50), nullable=False, unique=True)
     passwordhash = db.Column(db.String(100), nullable=False)
-    role = db.Column(db.ENUM('member', 'admin', 'superadmin', name='role_enum'), nullable=False, default='member')
+    role = db.Column(Enum('member', 'admin', 'superadmin', name='role_enum'), nullable=False, default='member')
     is_verified = db.Column(db.Boolean, nullable=False, default=False)
     registered_on = db.Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
     profile = db.relationship('Profiles', back_populates='user', uselist=False, cascade='all, delete')
@@ -44,7 +44,7 @@ class Profiles(db.Model):
     user_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('users.id', ondelete='cascade'), nullable=False, unique=True)
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
-    gender = db.Column(db.ENUM('male', 'female', 'other', name='gender_enum'))
+    gender = db.Column(Enum('male', 'female', 'other', name='gender_enum'))
     phone_number = db.Column(db.String(20))
     preffered_sizes = db.Column(db.ARRAY(db.String))
     shipping_address = db.Column(db.JSON)
